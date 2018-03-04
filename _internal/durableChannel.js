@@ -16,7 +16,7 @@ var _class = function () {
 
         this.channel = channel;
         this.queueName = queueName;
-        this.logger = (0, _logger.getLogger)('QE:' + this.queueName);
+        this.logger = (0, _logger.getLogger)('rabbitmq.queue:' + this.queueName);
     }
 
     _createClass(_class, [{
@@ -35,12 +35,12 @@ var _class = function () {
             this.channel.sendToQueue(this.queueName, Buffer.from(message), {
                 persistent: true
             });
-            this.logger.info('Message sent:', message);
+            this.logger.verbose('Message sent:', message);
         }
     }, {
         key: 'receive',
         value: function receive(consumer) {
-            this.logger.info('Waiting for messages...');
+            this.logger.verbose('Waiting for messages...');
             this.channel.consume(this.queueName, consumer, { noAck: false });
         }
     }]);

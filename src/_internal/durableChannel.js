@@ -5,7 +5,7 @@ export default class {
     constructor(channel, queueName) {
         this.channel = channel;
         this.queueName = queueName;
-        this.logger = getLogger(`QE:${this.queueName}`);
+        this.logger = getLogger(`rabbitmq.queue:${this.queueName}`);
     }
 
     init() {
@@ -20,11 +20,11 @@ export default class {
         this.channel.sendToQueue(this.queueName, Buffer.from(message), {
             persistent: true,
         });
-        this.logger.info('Message sent:', message);
+        this.logger.verbose('Message sent:', message);
     }
 
     receive(consumer) {
-        this.logger.info('Waiting for messages...');
+        this.logger.verbose('Waiting for messages...');
         this.channel.consume(this.queueName, consumer, { noAck: false });
     }
 

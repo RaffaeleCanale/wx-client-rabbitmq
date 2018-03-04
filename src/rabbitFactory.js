@@ -1,11 +1,11 @@
 import amqp from 'amqplib';
 import Joi from 'joi';
-import Logger from 'js-utils/logger';
+import { getLogger } from 'js-utils/logger';
 import DurableChannel from './_internal/durableChannel';
 import BroadcastEmitter from './_internal/broadcastEmitter';
 import BroadcastReceiver from './_internal/broadcastReceiver';
 
-
+const Logger = getLogger('rabbitmq.factory');
 const configSchema = Joi.object().keys({
     protocol: Joi.string().default('amqp'),
     hostname: Joi.string().hostname().required(),

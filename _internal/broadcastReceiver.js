@@ -8,8 +8,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _logger = require('js-utils/logger');
 
-var _utils = require('js-utils/utils');
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function () {
@@ -50,7 +48,6 @@ var _class = function () {
             }).then(function () {
                 _this2.isInit = true;
                 _this2.logger.verbose('Broadcast receiver initialized:', _this2.q.queue);
-                _this2.logger.verbose('Bindings:', _this2.bindings);
                 return _this2;
             });
         }
@@ -61,11 +58,11 @@ var _class = function () {
 
             this._ensureIsInit();
 
-            this.logger.info('Waiting for messages...');
+            this.logger.verbose('Waiting for messages...');
             this.channel.consume(this.q.queue, function (msg) {
                 try {
                     var message = JSON.parse(msg.content);
-                    _this3.logger.info('Message received:', message);
+                    _this3.logger.verbose('Message received:', message);
                     return consumer(message, msg.fields.routingKey);
                 } catch (err) {
                     return _this3.logger.error('Failed to parse JSON message', err);
@@ -82,7 +79,8 @@ var _class = function () {
     }, {
         key: '_name',
         get: function get() {
-            return this.isInit ? 'EX:' + this.exchangeName : '<uninitialized>';
+            var name = this.isInit ? this.exchangeName + '@' + this.bindings : 'unitinialized';
+            return 'rabbitmq.receiver<' + name + '>';
         }
     }]);
 

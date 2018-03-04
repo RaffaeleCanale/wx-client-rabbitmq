@@ -1,5 +1,4 @@
 import { getLogger } from 'js-utils/logger';
-import { contains } from 'js-utils/utils';
 
 export default class {
 
@@ -16,7 +15,8 @@ export default class {
     }
 
     get _name() {
-        return this.isInit ? `EX:${this.exchangeName}` : '<uninitialized>';
+        const name = this.isInit ? `${this.exchangeName}@${this.bindings}` : 'unitinialized';
+        return `rabbitmq.receiver<${name}>`;
     }
 
     init() {
@@ -30,7 +30,6 @@ export default class {
             .then(() => {
                 this.isInit = true;
                 this.logger.verbose('Broadcast receiver initialized:', this.q.queue);
-                this.logger.verbose('Bindings:', this.bindings);
                 return this;
             });
     }
@@ -38,11 +37,11 @@ export default class {
     consume(consumer) {
         this._ensureIsInit();
 
-        this.logger.info('Waiting for messages...');
+        this.logger.verbose('Waiting for messages...');
         this.channel.consume(this.q.queue, (msg) => {
             try {
                 const message = JSON.parse(msg.content);
-                this.logger.info('Message received:', message);
+                this.logger.verbose('Message received:', message);
                 return consumer(message, msg.fields.routingKey);
             } catch (err) {
                 return this.logger.error('Failed to parse JSON message', err);

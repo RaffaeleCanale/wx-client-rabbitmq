@@ -10,7 +10,7 @@ export default class {
     }
 
     get _name() {
-        return this.isInit ? `EX:${this.exchangeName}` : '<unitinialized>';
+        return `rabbitmq.emitter<${this.isInit ? this.exchangeName : 'unitinialized'}>`;
     }
 
     init() {
@@ -31,7 +31,7 @@ export default class {
             extendedBinding,
             Buffer.from(JSON.stringify(message))
         );
-        this.logger.info(`Message broadcasted@${extendedBinding}:`, message);
+        this.logger.verbose(`Message broadcasted@${extendedBinding}:`, message);
     }
 
     _ensureIsInit() {

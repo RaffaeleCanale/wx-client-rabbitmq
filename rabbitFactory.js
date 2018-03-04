@@ -16,8 +16,6 @@ var _joi2 = _interopRequireDefault(_joi);
 
 var _logger = require('js-utils/logger');
 
-var _logger2 = _interopRequireDefault(_logger);
-
 var _durableChannel = require('./_internal/durableChannel');
 
 var _durableChannel2 = _interopRequireDefault(_durableChannel);
@@ -34,6 +32,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Logger = (0, _logger.getLogger)('rabbitmq.factory');
 var configSchema = _joi2.default.object().keys({
     protocol: _joi2.default.string().default('amqp'),
     hostname: _joi2.default.string().hostname().required(),
@@ -65,7 +64,7 @@ var _class = function () {
 
             return _amqplib2.default.connect(this.config).then(function (conn) {
                 _this.connection = conn;
-                _logger2.default.info('Connected to', _this.config.hostname);
+                Logger.info('Connected to', _this.config.hostname);
             });
         }
     }, {

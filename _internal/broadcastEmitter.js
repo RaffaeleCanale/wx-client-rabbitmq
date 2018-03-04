@@ -44,7 +44,7 @@ var _class = function () {
 
             var extendedBinding = 'all.' + binding;
             this.channel.publish(this.exchangeName, extendedBinding, Buffer.from(JSON.stringify(message)));
-            this.logger.info('Message broadcasted@' + extendedBinding + ':', message);
+            this.logger.verbose('Message broadcasted@' + extendedBinding + ':', message);
         }
     }, {
         key: '_ensureIsInit',
@@ -56,7 +56,7 @@ var _class = function () {
     }, {
         key: '_name',
         get: function get() {
-            return this.isInit ? 'EX:' + this.exchangeName : '<unitinialized>';
+            return 'rabbitmq.emitter<' + (this.isInit ? this.exchangeName : 'unitinialized') + '>';
         }
     }]);
 
