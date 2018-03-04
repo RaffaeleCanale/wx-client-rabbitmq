@@ -1,8 +1,8 @@
 {
-    "name": "wx-rabbitmq-client",
+    "name": "wx-client-rabbitmq",
     "version": "0.0.1",
     "description": "Simplified RabbitMQ client",
-    "repository": "github:RaffaeleCanale/wx-rabbitmq-client",
+    "repository": "github:RaffaeleCanale/wx-client-rabbitmq",
     "license": "MIT",
     "main": "index.js",
     "scripts": {
