@@ -38,12 +38,13 @@ var _class = function () {
     }, {
         key: 'emit',
         value: function emit(message) {
-            var binding = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
+            var binding = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
             this._ensureIsInit();
 
-            this.channel.publish(this.exchangeName, binding, Buffer.from(JSON.stringify(message)));
-            this.logger.info('Message broadcasted@' + binding + ':', message);
+            var extendedBinding = 'all.' + binding;
+            this.channel.publish(this.exchangeName, extendedBinding, Buffer.from(JSON.stringify(message)));
+            this.logger.info('Message broadcasted@' + extendedBinding + ':', message);
         }
     }, {
         key: '_ensureIsInit',

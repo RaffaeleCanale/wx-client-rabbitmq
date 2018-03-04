@@ -6,14 +6,13 @@ export default class {
     constructor(channel, exchangeName, bindings = []) {
         this.channel = channel;
         this.exchangeName = exchangeName;
-        this.bindings = bindings;
+        if (bindings.length === 0) {
+            this.bindings = ['all.*'];
+        } else {
+            this.bindings = bindings.map(b => `all.${b}`);
+        }
         this.isInit = false;
         this.logger = getLogger(() => this._name);
-
-        // Always listen for the default binding
-        if (!contains(this.bindings, 'all')) {
-            this.bindings.push('all');
-        }
     }
 
     get _name() {
@@ -44,7 +43,7 @@ export default class {
             try {
                 const message = JSON.parse(msg.content);
                 this.logger.info('Message received:', message);
-                return consumer(message);
+                return consumer(message, msg.fields.routingKey);
             } catch (err) {
                 return this.logger.error('Failed to parse JSON message', err);
             }

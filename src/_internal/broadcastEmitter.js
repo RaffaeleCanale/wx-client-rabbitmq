@@ -22,11 +22,16 @@ export default class {
             });
     }
 
-    emit(message, binding = 'all') {
+    emit(message, binding = '') {
         this._ensureIsInit();
 
-        this.channel.publish(this.exchangeName, binding, Buffer.from(JSON.stringify(message)));
-        this.logger.info(`Message broadcasted@${binding}:`, message);
+        const extendedBinding = `all.${binding}`;
+        this.channel.publish(
+            this.exchangeName,
+            extendedBinding,
+            Buffer.from(JSON.stringify(message))
+        );
+        this.logger.info(`Message broadcasted@${extendedBinding}:`, message);
     }
 
     _ensureIsInit() {

@@ -22,16 +22,17 @@ var _class = function () {
 
         this.channel = channel;
         this.exchangeName = exchangeName;
-        this.bindings = bindings;
+        if (bindings.length === 0) {
+            this.bindings = ['all.*'];
+        } else {
+            this.bindings = bindings.map(function (b) {
+                return 'all.' + b;
+            });
+        }
         this.isInit = false;
         this.logger = (0, _logger.getLogger)(function () {
             return _this._name;
         });
-
-        // Always listen for the default binding
-        if (!(0, _utils.contains)(this.bindings, 'all')) {
-            this.bindings.push('all');
-        }
     }
 
     _createClass(_class, [{
@@ -65,7 +66,7 @@ var _class = function () {
                 try {
                     var message = JSON.parse(msg.content);
                     _this3.logger.info('Message received:', message);
-                    return consumer(message);
+                    return consumer(message, msg.fields.routingKey);
                 } catch (err) {
                     return _this3.logger.error('Failed to parse JSON message', err);
                 }
