@@ -1,0 +1,7 @@
+dist/*
+node_modules
+.directory
+.wxrc
+config.json
+docker-compose.yml
+!dist/bundle.js

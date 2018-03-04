@@ -1,0 +1,32 @@
+{
+    "extends": [
+        "airbnb-base",
+        "plugin:import/errors",
+        "plugin:import/warnings"
+    ],
+    "settings": {
+        "import/resolver": "node"
+    },
+    "parserOptions": {
+        "ecmaVersion": 7,
+        "sourceType": "module"
+    },
+    "env": {
+        "node": true
+    },
+    "globals": {
+        "_": true
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "padded-blocks": 0,
+        "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+        "comma-dangle": ["error", {
+            "arrays": "always-multiline",
+            "objects": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline",
+            "functions": "ignore"
+        }]
+    }
+}
