@@ -10,6 +10,13 @@ var _logger = require('js-utils/logger');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function userBinding(binding) {
+    if (binding.startsWith('all.')) {
+        return binding.substring(4);
+    }
+    return binding;
+}
+
 var _class = function () {
     function _class(channel, exchangeName) {
         var _this = this;
@@ -62,8 +69,9 @@ var _class = function () {
             this.channel.consume(this.q.queue, function (msg) {
                 try {
                     var message = JSON.parse(msg.content);
-                    _this3.logger.verbose('Message received:', message);
-                    return consumer(message, msg.fields.routingKey);
+                    var binding = userBinding(msg.fields.routingKey);
+                    _this3.logger.verbose('Message received:', message, binding);
+                    return consumer(message, binding);
                 } catch (err) {
                     return _this3.logger.error('Failed to parse JSON message', err);
                 }
@@ -79,7 +87,8 @@ var _class = function () {
     }, {
         key: '_name',
         get: function get() {
-            var name = this.isInit ? this.exchangeName + '@' + this.bindings : 'unitinialized';
+            var bindings = this.bindings.map(userBinding);
+            var name = this.isInit ? this.exchangeName + '@' + bindings : 'unitinialized';
             return 'rabbitmq.receiver<' + name + '>';
         }
     }]);

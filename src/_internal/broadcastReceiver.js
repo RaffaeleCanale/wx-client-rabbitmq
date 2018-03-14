@@ -1,5 +1,12 @@
 import { getLogger } from 'js-utils/logger';
 
+function userBinding(binding) {
+    if (binding.startsWith('all.')) {
+        return binding.substring(4);
+    }
+    return binding;
+}
+
 export default class {
 
     constructor(channel, exchangeName, bindings = []) {
@@ -15,7 +22,8 @@ export default class {
     }
 
     get _name() {
-        const name = this.isInit ? `${this.exchangeName}@${this.bindings}` : 'unitinialized';
+        const bindings = this.bindings.map(userBinding);
+        const name = this.isInit ? `${this.exchangeName}@${bindings}` : 'unitinialized';
         return `rabbitmq.receiver<${name}>`;
     }
 
@@ -41,8 +49,9 @@ export default class {
         this.channel.consume(this.q.queue, (msg) => {
             try {
                 const message = JSON.parse(msg.content);
-                this.logger.verbose('Message received:', message);
-                return consumer(message, msg.fields.routingKey);
+                const binding = userBinding(msg.fields.routingKey);
+                this.logger.verbose('Message received:', message, binding);
+                return consumer(message, binding);
             } catch (err) {
                 return this.logger.error('Failed to parse JSON message', err);
             }
