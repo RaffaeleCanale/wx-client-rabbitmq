@@ -12,7 +12,7 @@ const configSchema = Joi.object().keys({
     port: Joi.number().integer().positive().default(5672),
     username: Joi.string().required(),
     password: Joi.string().required(),
-}).required();
+}).unknown().required();
 
 function validateConfig(config) {
     const result = Joi.validate(config, configSchema);

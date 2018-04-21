@@ -39,7 +39,7 @@ var configSchema = _joi2.default.object().keys({
     port: _joi2.default.number().integer().positive().default(5672),
     username: _joi2.default.string().required(),
     password: _joi2.default.string().required()
-}).required();
+}).unknown().required();
 
 function validateConfig(config) {
     var result = _joi2.default.validate(config, configSchema);
