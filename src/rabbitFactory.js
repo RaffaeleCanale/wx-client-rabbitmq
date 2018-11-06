@@ -6,7 +6,8 @@ import BroadcastEmitter from './_internal/broadcastEmitter';
 import BroadcastReceiver from './_internal/broadcastReceiver';
 
 const Logger = getLogger('rabbitmq.factory');
-const configSchema = Joi.object().keys({
+
+export const rabbitmqOptionsValidator = Joi.object().keys({
     protocol: Joi.string().default('amqp'),
     hostname: Joi.string().hostname().required(),
     port: Joi.number().integer().positive().default(5672),
@@ -14,8 +15,8 @@ const configSchema = Joi.object().keys({
     password: Joi.string().required(),
 }).unknown().required();
 
-function validateConfig(config) {
-    const result = Joi.validate(config, configSchema);
+function validateOptions(options) {
+    const result = Joi.validate(options, rabbitmqOptionsValidator);
     if (result.error) {
         throw result.error;
     }
@@ -25,14 +26,14 @@ function validateConfig(config) {
 
 export default class {
 
-    constructor(config) {
-        this.config = validateConfig(config);
+    constructor(options) {
+        this.options = validateOptions(options);
     }
 
     connect() {
-        return amqp.connect(this.config).then((conn) => {
+        return amqp.connect(this.options).then((conn) => {
             this.connection = conn;
-            Logger.info('Connected to', this.config.hostname);
+            Logger.info('Connected to', this.options.hostname);
         });
     }
 

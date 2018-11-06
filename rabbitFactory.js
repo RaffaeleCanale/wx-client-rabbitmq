@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.rabbitmqOptionsValidator = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -33,7 +34,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Logger = (0, _logger.getLogger)('rabbitmq.factory');
-var configSchema = _joi2.default.object().keys({
+
+var rabbitmqOptionsValidator = exports.rabbitmqOptionsValidator = _joi2.default.object().keys({
     protocol: _joi2.default.string().default('amqp'),
     hostname: _joi2.default.string().hostname().required(),
     port: _joi2.default.number().integer().positive().default(5672),
@@ -41,8 +43,8 @@ var configSchema = _joi2.default.object().keys({
     password: _joi2.default.string().required()
 }).unknown().required();
 
-function validateConfig(config) {
-    var result = _joi2.default.validate(config, configSchema);
+function validateOptions(options) {
+    var result = _joi2.default.validate(options, rabbitmqOptionsValidator);
     if (result.error) {
         throw result.error;
     }
@@ -51,10 +53,10 @@ function validateConfig(config) {
 }
 
 var _class = function () {
-    function _class(config) {
+    function _class(options) {
         _classCallCheck(this, _class);
 
-        this.config = validateConfig(config);
+        this.options = validateOptions(options);
     }
 
     _createClass(_class, [{
@@ -62,9 +64,9 @@ var _class = function () {
         value: function connect() {
             var _this = this;
 
-            return _amqplib2.default.connect(this.config).then(function (conn) {
+            return _amqplib2.default.connect(this.options).then(function (conn) {
                 _this.connection = conn;
-                Logger.info('Connected to', _this.config.hostname);
+                Logger.info('Connected to', _this.options.hostname);
             });
         }
     }, {
